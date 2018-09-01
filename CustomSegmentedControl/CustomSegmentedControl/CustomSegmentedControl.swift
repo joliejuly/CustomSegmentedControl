@@ -129,12 +129,15 @@ final class CustomSegmentedControl: UIView {
     
     
     private func setUpSelectorView() {
-        
-        guard !buttons.isEmpty else { return }
     
-        selectorView.frame = CGRect(x: 0, y: 0, width: buttons[0].frame.width, height: frame.height)
+        selectorView.frame = CGRect(x: 0, y: 0, width: frame.width / CGFloat(buttons.count) - 20, height: frame.height)
         selectorView.backgroundColor = selectorBackgroundColor
         selectorView.layer.cornerRadius = selectorView.frame.height / 2
+        
+        guard !buttons.isEmpty else { return }
+        
+        //to do: why it's not called
+        buttons[0].setTitleColor(selectedTitleColor, for: .normal)
         
         stackView.addSubview(selectorView)
     }
