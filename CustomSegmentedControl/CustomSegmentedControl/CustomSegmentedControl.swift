@@ -41,6 +41,7 @@ final class CustomSegmentedControl: UIView {
 
     
     private func updateView() {
+        buttons.removeAll()
         
         var cleanString = commaSeparatedTitles.trimmingCharacters(in: .whitespaces)
         cleanString = cleanString.replacingOccurrences(of: " ", with: "")
@@ -50,10 +51,35 @@ final class CustomSegmentedControl: UIView {
         buttonTitles.forEach { title in
             let button = UIButton()
             button.setTitle(title, for: .normal)
+            button.setTitleColor(#colorLiteral(red: 0.9739639163, green: 0.7061158419, blue: 0.1748842001, alpha: 1), for: .normal)
             buttons.append(button)
         }
+        
+        setUpButtonsInStackView()
     }
     
+    
+    private func setUpButtonsInStackView() {
+        guard !buttons.isEmpty else { return }
+        
+        let stackView = UIStackView(arrangedSubviews: buttons)
+        stackView.axis = .horizontal
+        stackView.distribution = .fillEqually
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        addSubview(stackView)
+        
+        let constraints = [
+            stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            stackView.topAnchor.constraint(equalTo: topAnchor),
+            stackView.bottomAnchor.constraint(equalTo: bottomAnchor)
+        ]
+        
+        NSLayoutConstraint.activate(constraints)
+        
+        layoutIfNeeded()
+    }
     
     
     
