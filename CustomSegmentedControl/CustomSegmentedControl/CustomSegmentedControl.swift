@@ -110,6 +110,8 @@ final class CustomSegmentedControl: UIView {
     private func setUpButtonsInStackView() {
         guard !buttons.isEmpty else { return }
         
+        setUpSelectorView()
+        
         buttons.forEach { button in
             stackView.addArrangedSubview(button)
         }
@@ -130,29 +132,17 @@ final class CustomSegmentedControl: UIView {
         
         NSLayoutConstraint.activate(constraints)
         
-        setUpSelectorView()
+        
     }
     
     
     private func setUpSelectorView() {
-        guard !stackView.arrangedSubviews.isEmpty, !buttons.isEmpty else { return }
         
-        stackView.addSubview(selectorView)
+        addSubview(selectorView)
         
-        selectorView.translatesAutoresizingMaskIntoConstraints = false
-        
-        let constraints = [
-            selectorView.widthAnchor.constraint(equalToConstant: stackView.arrangedSubviews[0].bounds.size.width),
-            selectorView.heightAnchor.constraint(equalToConstant: stackView.bounds.size.height),
-            selectorView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
-            selectorView.topAnchor.constraint(equalTo: stackView.topAnchor)
-        ]
-    
-        NSLayoutConstraint.activate(constraints)
+        selectorView.frame = CGRect(x: 0, y: 0, width: frame.width / CGFloat(buttons.count), height: frame.height)
         
         selectorView.layer.cornerRadius = selectorView.frame.height / 2
-        
-        buttons[0].setTitleColor(.white, for: .normal)
     }
     
     
