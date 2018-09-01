@@ -12,6 +12,7 @@ import UIKit
 final class CustomSegmentedControl: UIView {
     
     var buttons = [UIButton]()
+    var stackView = UIStackView()
     
     @IBInspectable
     var borderWidth: CGFloat = 0 {
@@ -30,6 +31,7 @@ final class CustomSegmentedControl: UIView {
     @IBInspectable
     var commaSeparatedTitles: String = "" {
         didSet {
+            cleanUpSubviews()
             updateView()
         }
     }
@@ -39,9 +41,14 @@ final class CustomSegmentedControl: UIView {
         layer.cornerRadius = frame.height / 2
     }
 
+    private func cleanUpSubviews() {
+        buttons.removeAll()
+        subviews.forEach { view in
+            view.removeFromSuperview()
+        }
+    }
     
     private func updateView() {
-        buttons.removeAll()
         
         var cleanString = commaSeparatedTitles.trimmingCharacters(in: .whitespaces)
         cleanString = cleanString.replacingOccurrences(of: " ", with: "")
@@ -56,13 +63,17 @@ final class CustomSegmentedControl: UIView {
         }
         
         setUpButtonsInStackView()
+        setUpSelectorView()
     }
     
     
     private func setUpButtonsInStackView() {
         guard !buttons.isEmpty else { return }
         
-        let stackView = UIStackView(arrangedSubviews: buttons)
+        buttons.forEach { button in
+            stackView.addArrangedSubview(button)
+        }
+        
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -77,10 +88,33 @@ final class CustomSegmentedControl: UIView {
         ]
         
         NSLayoutConstraint.activate(constraints)
-        
-        layoutIfNeeded()
     }
     
+    
+    private func setUpSelectorView() {
+        guard !stackView.arrangedSubviews.isEmpty, !buttons.isEmpty else { return }
+        
+        let selectorView = UIView()
+
+        stackView.addSubview(selectorView)
+        
+        selectorView.translatesAutoresizingMaskIntoConstraints = false
+        
+        let constraints = [
+            selectorView.widthAnchor.constraint(equalToConstant: stackView.arrangedSubviews[0].bounds.size.width),
+            selectorView.heightAnchor.constraint(equalToConstant: stackView.bounds.size.height),
+            selectorView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
+            selectorView.topAnchor.constraint(equalTo: stackView.topAnchor)
+        ]
+    
+        NSLayoutConstraint.activate(constraints)
+        
+        selectorView.layer.cornerRadius = selectorView.frame.height / 2
+        
+        selectorView.backgroundColor = #colorLiteral(red: 0.9739639163, green: 0.7061158419, blue: 0.1748842001, alpha: 1)
+        
+        buttons[0].setTitleColor(.white, for: .normal)
+    }
     
     
 }
