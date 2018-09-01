@@ -50,11 +50,7 @@ final class CustomSegmentedControl: UIView {
     }
     
     @IBInspectable
-    private var selectedTitleColor: UIColor = .gray {
-        didSet {
-            updateSelectedTitleColor(with: selectedTitleColor)
-        }
-    }
+    private var selectedTitleColor: UIColor = .gray
     
     @IBInspectable
     private var commaSeparatedTitles: String = "" {
@@ -86,10 +82,6 @@ final class CustomSegmentedControl: UIView {
         selectorView.backgroundColor = color
     }
     
-    private func updateSelectedTitleColor(with color: UIColor) {
-        buttons[0].setTitleColor(color, for: .normal)
-    }
-    
     private func updateView() {
         
         var cleanString = commaSeparatedTitles.trimmingCharacters(in: .whitespaces)
@@ -100,6 +92,7 @@ final class CustomSegmentedControl: UIView {
         buttonTitles.forEach { title in
             let button = UIButton()
             button.setTitle(title, for: .normal)
+            button.addTarget(self, action: #selector(buttonWasSelected(sender:)), for: .touchUpInside)
             buttons.append(button)
         }
         
@@ -111,7 +104,6 @@ final class CustomSegmentedControl: UIView {
         guard !buttons.isEmpty else { return }
         
         setUpSelectorView()
-        
         buttons.forEach { button in
             stackView.addArrangedSubview(button)
         }
@@ -138,12 +130,34 @@ final class CustomSegmentedControl: UIView {
     
     private func setUpSelectorView() {
         
-        addSubview(selectorView)
-        
-        selectorView.frame = CGRect(x: 0, y: 0, width: frame.width / CGFloat(buttons.count), height: frame.height)
-        
+        guard !buttons.isEmpty else { return }
+    
+        selectorView.frame = CGRect(x: 0, y: 0, width: buttons[0].frame.width, height: frame.height)
+        selectorView.backgroundColor = selectorBackgroundColor
         selectorView.layer.cornerRadius = selectorView.frame.height / 2
+        
+        stackView.addSubview(selectorView)
     }
     
+    
+    @objc private func buttonWasSelected(sender: UIButton) {
+        
+        UIView.animate(withDuration: 0.4, animations: {
+            self.selectorView.frame = sender.frame
+            
+            sender.setTitleColor(self.selectedTitleColor, for: .normal)
+            
+            self.buttons.forEach { button in
+                if button != sender {
+                    button.setTitleColor(self.textColor, for: .normal)
+                }
+            }
+        })
+        
+        
+        
+        
+        
+    }
     
 }
