@@ -15,6 +15,12 @@ final class CustomSegmentedControl: UIView {
     private let stackView = UIStackView()
     private let selectorView = UIView()
     
+    override func awakeFromNib() {
+        clipsToBounds = true
+        isOpaque = false //will be black
+    }
+    
+    
     @IBInspectable
     private var borderWidth: CGFloat = 0 {
         didSet {
@@ -33,6 +39,13 @@ final class CustomSegmentedControl: UIView {
     private var textColor: UIColor = .gray {
         didSet {
             updateTextColor(with: textColor)
+        }
+    }
+    
+    @IBInspectable
+    private var selectorBackgroundColor: UIColor = .white {
+        didSet {
+            updateSelectorColor(with: selectorBackgroundColor)
         }
     }
     
@@ -62,6 +75,10 @@ final class CustomSegmentedControl: UIView {
         }
     }
     
+    private func updateSelectorColor(with color: selectorBackgroundColor) {
+        selectorView.backgroundColor = color
+    }
+    
     private func updateView() {
         
         var cleanString = commaSeparatedTitles.trimmingCharacters(in: .whitespaces)
@@ -76,7 +93,6 @@ final class CustomSegmentedControl: UIView {
         }
         
         setUpButtonsInStackView()
-        setUpSelectorView()
     }
     
     
@@ -89,6 +105,7 @@ final class CustomSegmentedControl: UIView {
         
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
+        stackView.backgroundColor = .clear
         stackView.translatesAutoresizingMaskIntoConstraints = false
 
         addSubview(stackView)
@@ -101,14 +118,14 @@ final class CustomSegmentedControl: UIView {
         ]
         
         NSLayoutConstraint.activate(constraints)
+        
+        setUpSelectorView()
     }
     
     
     private func setUpSelectorView() {
         guard !stackView.arrangedSubviews.isEmpty, !buttons.isEmpty else { return }
         
-        
-
         stackView.addSubview(selectorView)
         
         selectorView.translatesAutoresizingMaskIntoConstraints = false
@@ -123,8 +140,6 @@ final class CustomSegmentedControl: UIView {
         NSLayoutConstraint.activate(constraints)
         
         selectorView.layer.cornerRadius = selectorView.frame.height / 2
-        
-        selectorView.backgroundColor = #colorLiteral(red: 0.9739639163, green: 0.7061158419, blue: 0.1748842001, alpha: 1)
         
         buttons[0].setTitleColor(.white, for: .normal)
     }
