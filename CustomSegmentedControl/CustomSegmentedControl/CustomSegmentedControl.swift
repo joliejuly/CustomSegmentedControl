@@ -29,6 +29,13 @@ final class CustomSegmentedControl: UIView {
     }
     
     @IBInspectable
+    var textColor: UIColor = .gray {
+        didSet {
+            updateTextColor(with: textColor)
+        }
+    }
+    
+    @IBInspectable
     var commaSeparatedTitles: String = "" {
         didSet {
             cleanUpSubviews()
@@ -45,6 +52,12 @@ final class CustomSegmentedControl: UIView {
         buttons.removeAll()
         subviews.forEach { view in
             view.removeFromSuperview()
+        }
+    }
+    
+    private func updateTextColor(with color: UIColor) {
+        buttons.forEach { button in
+            button.setTitleColor(color, for: .normal)
         }
     }
     
