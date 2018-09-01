@@ -11,32 +11,33 @@ import UIKit
 @IBDesignable
 final class CustomSegmentedControl: UIView {
     
-    var buttons = [UIButton]()
-    var stackView = UIStackView()
+    private var buttons = [UIButton]()
+    private let stackView = UIStackView()
+    private let selectorView = UIView()
     
     @IBInspectable
-    var borderWidth: CGFloat = 0 {
+    private var borderWidth: CGFloat = 0 {
         didSet {
             layer.borderWidth = borderWidth
         }
     }
     
     @IBInspectable
-    var borderColor: UIColor = .clear {
+    private var borderColor: UIColor = .clear {
         didSet {
             layer.borderColor = borderColor.cgColor
         }
     }
     
     @IBInspectable
-    var textColor: UIColor = .gray {
+    private var textColor: UIColor = .gray {
         didSet {
             updateTextColor(with: textColor)
         }
     }
     
     @IBInspectable
-    var commaSeparatedTitles: String = "" {
+    private var commaSeparatedTitles: String = "" {
         didSet {
             cleanUpSubviews()
             updateView()
@@ -71,7 +72,6 @@ final class CustomSegmentedControl: UIView {
         buttonTitles.forEach { title in
             let button = UIButton()
             button.setTitle(title, for: .normal)
-            button.setTitleColor(#colorLiteral(red: 0.9739639163, green: 0.7061158419, blue: 0.1748842001, alpha: 1), for: .normal)
             buttons.append(button)
         }
         
@@ -107,7 +107,7 @@ final class CustomSegmentedControl: UIView {
     private func setUpSelectorView() {
         guard !stackView.arrangedSubviews.isEmpty, !buttons.isEmpty else { return }
         
-        let selectorView = UIView()
+        
 
         stackView.addSubview(selectorView)
         
