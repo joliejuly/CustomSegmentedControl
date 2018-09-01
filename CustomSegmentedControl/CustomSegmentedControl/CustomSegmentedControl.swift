@@ -50,6 +50,13 @@ final class CustomSegmentedControl: UIView {
     }
     
     @IBInspectable
+    private var selectedTitleColor: UIColor = .gray {
+        didSet {
+            updateSelectedTitleColor(with: selectedTitleColor)
+        }
+    }
+    
+    @IBInspectable
     private var commaSeparatedTitles: String = "" {
         didSet {
             cleanUpSubviews()
@@ -75,8 +82,12 @@ final class CustomSegmentedControl: UIView {
         }
     }
     
-    private func updateSelectorColor(with color: selectorBackgroundColor) {
+    private func updateSelectorColor(with color: UIColor) {
         selectorView.backgroundColor = color
+    }
+    
+    private func updateSelectedTitleColor(with color: UIColor) {
+        buttons[0].setTitleColor(color, for: .normal)
     }
     
     private func updateView() {
