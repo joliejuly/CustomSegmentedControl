@@ -26,7 +26,7 @@ final class CustomSegmentedControl: UIControl {
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        layoutSubviews()
+
     }
     
     @IBInspectable
@@ -70,7 +70,6 @@ final class CustomSegmentedControl: UIControl {
             cleanUpSubviews()
             updateView()
             updateTextColor(withMainColor: textColor, andSelectedColor: selectedTitleColor)
-            layoutSubviews()
             selectedSegmentIndex = selectedSegmentNumber
         }
     }
@@ -110,6 +109,8 @@ final class CustomSegmentedControl: UIControl {
     }
     
     private func updateView() {
+    
+        cleanUpSubviews()
         
         var cleanString = commaSeparatedTitles.trimmingCharacters(in: .whitespaces)
         cleanString = cleanString.replacingOccurrences(of: " ", with: "")
@@ -122,7 +123,6 @@ final class CustomSegmentedControl: UIControl {
             button.addTarget(self, action: #selector(buttonWasSelected(sender:)), for: .touchUpInside)
             buttons.append(button)
         }
-        
         setUpButtonsInStackView()
     }
     
@@ -130,19 +130,17 @@ final class CustomSegmentedControl: UIControl {
     private func setUpButtonsInStackView() {
         guard !buttons.isEmpty else { return }
         
-        setUpSelectorView()
-        
         buttons.forEach { button in
             stackView.addArrangedSubview(button)
         }
-        
+       
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
         stackView.backgroundColor = .clear
         stackView.translatesAutoresizingMaskIntoConstraints = false
 
         addSubview(stackView)
-        
+  
         let constraints = [
             stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
@@ -151,22 +149,24 @@ final class CustomSegmentedControl: UIControl {
         ]
         
         NSLayoutConstraint.activate(constraints)
+        
+        setUpSelectorView()
     }
     
     private func setUpSelectorView() {
         
-        let segmentedControlWidth = bounds.size.width
+        let segmentedControlWidth = bounds.width 
         let buttonsCount = CGFloat(buttons.count)
-        let widthOfOneButton = segmentedControlWidth / buttonsCount 
+        let widthOfOneButton = round(segmentedControlWidth / buttonsCount)
         let orderOfButton = CGFloat(selectedSegmentNumber)
         
         let xPositionOfSelectedButton = widthOfOneButton * orderOfButton
         
         selectorView.frame = CGRect(x: xPositionOfSelectedButton, y: 0, width: widthOfOneButton, height: frame.height)
         selectorView.backgroundColor = selectorBackgroundColor
-        selectorView.layer.cornerRadius = selectorView.bounds.size.height / 2
+        selectorView.layer.cornerRadius = selectorView.frame.height / 2
         
-        stackView.addSubview(selectorView)
+        insertSubview(selectorView, belowSubview: stackView)
     }
     
     
