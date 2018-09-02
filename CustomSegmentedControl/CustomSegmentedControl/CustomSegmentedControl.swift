@@ -9,18 +9,25 @@
 import UIKit
 
 @IBDesignable
-final class CustomSegmentedControl: UIView {
+final class CustomSegmentedControl: UIControl {
     
     private var buttons = [UIButton]()
     private let stackView = UIStackView()
     private let selectorView = UIView()
     
-    override func awakeFromNib() {
-        clipsToBounds = true
-        isOpaque = false //will be black
+    public var selectedSegmentIndex: Int = 0
     
+    override func awakeFromNib() {
+        setUpViews()
     }
     
+    override func prepareForInterfaceBuilder() {
+        setUpViews()
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        layoutSubviews()
+    }
     
     @IBInspectable
     private var borderWidth: CGFloat = 0 {
@@ -63,6 +70,8 @@ final class CustomSegmentedControl: UIView {
             cleanUpSubviews()
             updateView()
             updateTextColor(withMainColor: textColor, andSelectedColor: selectedTitleColor)
+            layoutSubviews()
+            selectedSegmentIndex = selectedSegmentNumber
         }
     }
     
@@ -74,8 +83,9 @@ final class CustomSegmentedControl: UIView {
         }
     }
     
-    override func draw(_ rect: CGRect) {
-        //makes perfect rounded caps on each side
+    private func setUpViews() {
+        clipsToBounds = true
+        isOpaque = false //will be black
         layer.cornerRadius = frame.height / 2
     }
 
@@ -141,32 +151,28 @@ final class CustomSegmentedControl: UIView {
         ]
         
         NSLayoutConstraint.activate(constraints)
-        
-        
     }
-    
     
     private func setUpSelectorView() {
         
         let segmentedControlWidth = bounds.size.width
         let buttonsCount = CGFloat(buttons.count)
         let widthOfOneButton = segmentedControlWidth / buttonsCount 
-        let orderOfButton = (CGFloat(buttons.count - selectedSegmentNumber))
+        let orderOfButton = CGFloat(selectedSegmentNumber)
         
-        let xPositionOfSelectedButton = segmentedControlWidth - (widthOfOneButton * orderOfButton)
-        
+        let xPositionOfSelectedButton = widthOfOneButton * orderOfButton
         
         selectorView.frame = CGRect(x: xPositionOfSelectedButton, y: 0, width: widthOfOneButton, height: frame.height)
         selectorView.backgroundColor = selectorBackgroundColor
-        selectorView.layer.cornerRadius = selectorView.frame.height / 2
-        
-        guard !buttons.isEmpty else { return }
+        selectorView.layer.cornerRadius = selectorView.bounds.size.height / 2
         
         stackView.addSubview(selectorView)
     }
     
     
     @objc private func buttonWasSelected(sender: UIButton) {
+        
+        selectedSegmentIndex = buttons.firstIndex(of: sender) ?? selectedSegmentNumber
         
         UIView.animate(withDuration: 0.4, animations: {
             self.selectorView.frame = sender.frame
@@ -179,6 +185,8 @@ final class CustomSegmentedControl: UIView {
                 }
             }
         })
+        
+        sendActions(for: .valueChanged)
     }
     
 }
