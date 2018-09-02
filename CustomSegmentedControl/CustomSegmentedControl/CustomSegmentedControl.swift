@@ -18,6 +18,7 @@ final class CustomSegmentedControl: UIView {
     override func awakeFromNib() {
         clipsToBounds = true
         isOpaque = false //will be black
+    
     }
     
     
@@ -38,7 +39,7 @@ final class CustomSegmentedControl: UIView {
     @IBInspectable
     private var textColor: UIColor = .gray {
         didSet {
-            updateTextColor(with: textColor)
+            updateTextColor(withMainColor: textColor, andSelectedColor: selectedTitleColor)
         }
     }
     
@@ -50,7 +51,20 @@ final class CustomSegmentedControl: UIView {
     }
     
     @IBInspectable
-    private var selectedTitleColor: UIColor = .gray
+    private var selectedTitleColor: UIColor = .gray {
+        didSet {
+            updateTextColor(withMainColor: textColor, andSelectedColor: selectedTitleColor)
+        }
+    }
+    
+    @IBInspectable
+    private var selectedSegmentNumber: Int = 0 {
+        didSet {
+            cleanUpSubviews()
+            updateView()
+            updateTextColor(withMainColor: textColor, andSelectedColor: selectedTitleColor)
+        }
+    }
     
     @IBInspectable
     private var commaSeparatedTitles: String = "" {
@@ -66,16 +80,19 @@ final class CustomSegmentedControl: UIView {
     }
 
     private func cleanUpSubviews() {
-        buttons.removeAll()
-        subviews.forEach { view in
-            view.removeFromSuperview()
+        buttons.forEach {
+            stackView.removeArrangedSubview($0)
         }
+        buttons = []
     }
     
-    private func updateTextColor(with color: UIColor) {
+    private func updateTextColor(withMainColor mainColor: UIColor, andSelectedColor selectedColor: UIColor) {
         buttons.forEach { button in
-            button.setTitleColor(color, for: .normal)
+            button.setTitleColor(mainColor, for: .normal)
         }
+        
+        guard selectedSegmentNumber < buttons.count  else { return }
+        buttons[selectedSegmentNumber].setTitleColor(selectedColor, for: .normal)
     }
     
     private func updateSelectorColor(with color: UIColor) {
@@ -104,6 +121,7 @@ final class CustomSegmentedControl: UIView {
         guard !buttons.isEmpty else { return }
         
         setUpSelectorView()
+        
         buttons.forEach { button in
             stackView.addArrangedSubview(button)
         }
@@ -129,15 +147,20 @@ final class CustomSegmentedControl: UIView {
     
     
     private func setUpSelectorView() {
-    
-        selectorView.frame = CGRect(x: 0, y: 0, width: frame.width / CGFloat(buttons.count) - 20, height: frame.height)
+        
+        let segmentedControlWidth = bounds.size.width
+        let buttonsCount = CGFloat(buttons.count)
+        let widthOfOneButton = segmentedControlWidth / buttonsCount 
+        let orderOfButton = (CGFloat(buttons.count - selectedSegmentNumber))
+        
+        let xPositionOfSelectedButton = segmentedControlWidth - (widthOfOneButton * orderOfButton)
+        
+        
+        selectorView.frame = CGRect(x: xPositionOfSelectedButton, y: 0, width: widthOfOneButton, height: frame.height)
         selectorView.backgroundColor = selectorBackgroundColor
         selectorView.layer.cornerRadius = selectorView.frame.height / 2
         
         guard !buttons.isEmpty else { return }
-        
-        //to do: why it's not called
-        buttons[0].setTitleColor(selectedTitleColor, for: .normal)
         
         stackView.addSubview(selectorView)
     }
@@ -156,11 +179,6 @@ final class CustomSegmentedControl: UIView {
                 }
             }
         })
-        
-        
-        
-        
-        
     }
     
 }
