@@ -19,10 +19,12 @@ final class CustomSegmentedControl: UIControl {
     
     override func awakeFromNib() {
         setUpViews()
+        updateView()
     }
     
     override func prepareForInterfaceBuilder() {
         setUpViews()
+        updateView()
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

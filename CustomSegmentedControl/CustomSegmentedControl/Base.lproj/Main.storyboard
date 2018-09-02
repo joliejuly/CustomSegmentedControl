@@ -19,9 +19,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view opaque="NO" clipsSubviews="YES" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="MfP-9h-Wgv" customClass="CustomSegmentedControl" customModule="CustomSegmentedControl" customModuleProvider="target">
-                                <rect key="frame" x="25" y="184" width="364" height="75"/>
+                                <rect key="frame" x="82" y="330.66666666666669" width="250" height="75"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="75" id="fFq-lf-sOI"/>
+                                    <constraint firstAttribute="width" constant="250" id="tcV-Qn-YlY"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
@@ -48,9 +49,8 @@
                         </subviews>
                         <color key="backgroundColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="MfP-9h-Wgv" secondAttribute="trailing" constant="25" id="M9J-mx-dQP"/>
-                            <constraint firstItem="MfP-9h-Wgv" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="25" id="Ts3-2c-F2e"/>
-                            <constraint firstItem="MfP-9h-Wgv" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="184" id="WvL-xb-b7x"/>
+                            <constraint firstItem="MfP-9h-Wgv" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Kkx-gj-lrg"/>
+                            <constraint firstItem="MfP-9h-Wgv" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="sk4-HC-z06"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
